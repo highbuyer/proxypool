@@ -5,14 +5,13 @@ import (
 	_ "net/http/pprof"
 	"os"
 
-	"github.com/ssrlive/proxypool/config"
-	"github.com/ssrlive/proxypool/pkg/geoIp"
-
-	"github.com/ssrlive/proxypool/api"
-	"github.com/ssrlive/proxypool/internal/app"
-	"github.com/ssrlive/proxypool/internal/cron"
-	"github.com/ssrlive/proxypool/internal/database"
-	"github.com/ssrlive/proxypool/log"
+	"github.com/highbuyer/proxypool/api"
+	"github.com/highbuyer/proxypool/config"
+	"github.com/highbuyer/proxypool/internal/app"
+	"github.com/highbuyer/proxypool/internal/cron"
+	"github.com/highbuyer/proxypool/internal/database"
+	"github.com/highbuyer/proxypool/log"
+	"github.com/highbuyer/proxypool/pkg/geoIp"
 )
 
 var debugMode = false
@@ -37,7 +36,7 @@ func main() {
 		configFilePath = os.Getenv("CONFIG_FILE")
 	}
 	if configFilePath == "" {
-		configFilePath = "config.yaml"
+		configFilePath = "config\\config.yaml"
 	}
 
 	config.SetFilePath(configFilePath)
