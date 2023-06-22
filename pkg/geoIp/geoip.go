@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-
+	"github.com/oschwald/geoip2-golang"
 	"github.com/highbuyer/proxypool/config"
 )
 
