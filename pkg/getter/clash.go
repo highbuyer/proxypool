@@ -7,10 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ssrlive/proxypool/log"
-	"github.com/ssrlive/proxypool/pkg/proxy"
-	"github.com/ssrlive/proxypool/pkg/tool"
-	"gopkg.in/yaml.v3"
+	"github.com/highbuyer/proxypool/log"
+	"github.com/highbuyer/proxypool/pkg/proxy"
+	"github.com/highbuyer/proxypool/pkg/tool"
 )
 
 func init() {

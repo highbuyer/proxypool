@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/ssrlive/proxypool/pkg/geoIp"
+	"github.com/highbuyer/proxypool/pkg/geoIp"
 )
 
 /* Base implements interface Proxy. It's the basic proxy struct. Vmess etc extends Base*/

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ssrlive/proxypool/pkg/tool"
 	"github.com/ghodss/yaml"
+	"github.com/highbuyer/proxypool/pkg/tool"
 )
 
 func TestSSLink(t *testing.T) {

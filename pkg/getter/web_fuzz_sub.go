@@ -5,10 +5,10 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/ssrlive/proxypool/log"
+	"github.com/highbuyer/proxypool/log"
 
-	"github.com/ssrlive/proxypool/pkg/proxy"
-	"github.com/ssrlive/proxypool/pkg/tool"
+	"github.com/highbuyer/proxypool/pkg/proxy"
+	"github.com/highbuyer/proxypool/pkg/tool"
 )
 
 func init() {
