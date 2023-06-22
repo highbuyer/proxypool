@@ -10,6 +10,7 @@ import (
 	"github.com/highbuyer/proxypool/log"
 	"github.com/highbuyer/proxypool/pkg/proxy"
 	"github.com/highbuyer/proxypool/pkg/tool"
+	"gopkg.in/yaml.v3"
 )
 
 func init() {
