@@ -2,7 +2,7 @@ package redis
 
 import (
 	"errors"
-	"github.com/your-username/your-project-name/redis"
+	"github.com/highbuyer/proxypool/redis"
 )
 
 // 从 redis 获取缓存数据
