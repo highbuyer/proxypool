@@ -21,6 +21,7 @@
 package redis
 
 import (
+	"github.com/highbuyer/proxypool/redis"
 	"testing"
 )
 
