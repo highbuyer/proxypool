@@ -2,7 +2,7 @@ package redis
 
 import (
 	"fmt"
-	"github.com/gomodule/redigo/redis"
+	"github.com/highbuyer/proxypool/internal/redis"
 	"testing"
 )
 
