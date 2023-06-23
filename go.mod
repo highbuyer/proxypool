@@ -19,7 +19,7 @@ require (
 	github.com/robertkrimen/otto v0.2.1
 	github.com/sirupsen/logrus v1.9.2
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
-	github.com/gomodule/redigo v1.89
+	github.com/gomodule/redigo v1.8.9
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.5.2
