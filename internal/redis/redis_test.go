@@ -2,8 +2,8 @@ package redis
 
 import (
 	"fmt"
-	"testing"
 	"github.com/gomodule/redigo/redis"
+	"testing"
 )
 
 func TestConnectRedis(t *testing.T) {
