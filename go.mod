@@ -11,6 +11,7 @@ require (
 	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/gocolly/colly v1.2.0
+	github.com/gomodule/redigo v1.8.9
 	github.com/heroku/x v0.0.59
 	github.com/ivpusic/grpool v1.0.0
 	github.com/jasonlvhit/gocron v0.0.1
@@ -19,7 +20,6 @@ require (
 	github.com/robertkrimen/otto v0.2.1
 	github.com/sirupsen/logrus v1.9.2
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
-	github.com/gomodule/redigo v1.8.9
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.5.2
@@ -46,7 +46,6 @@ require (
 	github.com/gofrs/uuid/v5 v5.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect
