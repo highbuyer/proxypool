@@ -2,6 +2,7 @@ package test_redis
 
 import (
 	"fmt"
+	"github.com/highbuyer/proxypool/internal/redis"
 	"testing"
 )
 
