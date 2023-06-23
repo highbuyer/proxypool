@@ -2,7 +2,7 @@ package redis
 
 import (
 	"errors"
-	"github.com/highbuyer/proxypool/redis"
+	"github.com/highbuyer/proxypool/internal/redis"
 )
 
 // 从 redis 获取缓存数据
