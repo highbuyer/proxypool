@@ -48,7 +48,7 @@ func TestConnectRedis(t *testing.T) {
 
 	authVal, autherr := getValue(conn, key, t)
 	if authVal != value || autherr != nil {
-		t.Errorf(fmt.Sprintf("expect :%s actual:%s", value, result, err))
+		t.Errorf(fmt.Sprintf("expected: %v but got: %v (error: %v)", expectedValue, resultValue, err))
 		return
 	}
 
