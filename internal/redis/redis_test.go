@@ -1,31 +1,12 @@
-//package redis
-//
-//import (
-//	//"github.com/highbuyer/proxypool/redis" // 导入你自己项目路径下的 redis 包
-//	"testing"
-//)
-//
-//func TestRedisConnect(t *testing.T) {
-//	conn := redis.Pool.Get()
-//	defer conn.Close()
-//
-//	_, err := conn.Do("PING")
-//
-//	if err != nil {
-//		t.Errorf("cannot connect to Redis: %s", err)
-//		return
-//	}
-//}
 // redis_test.go
-
 package redis
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestConnectRedis(t *testing.T) {
-	// 测试未授权访问
 	conn, err := ConnectRedis("localhost:6379", "")
 	if err != nil {
 		t.Errorf("Expected nil error, but got %v instead", err)
@@ -33,31 +14,56 @@ func TestConnectRedis(t *testing.T) {
 
 	defer conn.Close()
 
-	_, setErr := conn.Do("SET", "test_key1", "test_value1")
+	value1 := "test_value1"
+	key1 := "test_key1"
+
+	setErr := setValue(conn, key1, value1, t)
 	if setErr != nil {
-		t.Errorf("Expected nil error, but got %v instead", setErr)
+		t.Errorf("Expected no errors when setting value to key. Got %v instead.", setErr.Error())
+		return
 	}
 
-	value, err := conn.Do("GET", "test_key1")
-	if value != "test_value1" || err != nil {
-		t.Errorf("Expected test_value1,nil ,but got %v,%v instead", value, err.Error())
+	resultVal, err := getValue(conn, key1, t)
+	if resultVal != value1 || err != nil {
+		t.Errorf("Expected the same value as was set in Redis for key=%s. Got %v,%v respectively.", key, resultVal, err.Error())
+		return
 	}
 
-	// 测试授权访问
 	conn2, authErr := ConnectRedis("localhost:6379", "password")
 	if authErr != nil {
-		t.Errorf("Expected nil error, but got %v instead", authErr)
+		t.Errorf("Expected no errors when connecting with authorization. Got %v instead.", authErr.Error())
+		return
 	}
 
 	defer conn2.Close()
 
-	_, setAuthError := conn2.Do("SET", "test_key2", "test_value2")
+	value2 := "test_value2"
+	key2 := "test_key2"
+
+	setAuthError := setValue(conn, key2, value2, t)
 	if setAuthError != nil {
-		t.Errorf("Expected nil error,but got %v instead ", setAuthError.Error())
+		t.Errorf("Expected no errors when setting a value with authorization. Got %v instead.", setAuthError.Error())
+		return
 	}
 
-	val, err := conn2.Do("GET ", " test_key2 ")
-	if val != " test_value2 " || err != nil {
-		t.Errorf("Expected test_value2,nil,but got %v,%v instead", val, err.Error())
+	authVal, authErr := getValue(conn2, key2, t)
+	if authVal != value2 || authErr != nil {
+		t.Errorf("Expected the same value as was set in Redis for key=%s. Got %v,%v respectively.", key2, authVal, err.Error())
+		return
 	}
+}
+
+func setValue(conn redis.Conn, key string, value string, t *testing.T) error {
+	_, err := conn.Do("SET", key, value)
+	return err
+}
+
+func getValue(conn redis.Conn, key string, t *testing.T) (string, error) {
+	value, err := conn.Do("GET", key)
+	if err != nil {
+		t.Errorf("Unable to get a response from Redis: " + err.Error())
+		return "", err
+	}
+
+	return fmt.Sprintf("%s", value), nil
 }

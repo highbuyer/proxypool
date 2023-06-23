@@ -1,4 +1,4 @@
-// Package redis.go
+// redis.go
 package redis
 
 import (
