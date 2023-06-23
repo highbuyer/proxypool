@@ -1,8 +1,7 @@
-package test_redis
+package redis
 
 import (
 	"fmt"
-	"github.com/highbuyer/proxypool/internal/redis"
 	"testing"
 )
 
