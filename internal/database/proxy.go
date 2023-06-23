@@ -5,6 +5,7 @@ import (
 
 	"github.com/highbuyer/proxypool/log"
 	"github.com/highbuyer/proxypool/pkg/proxy"
+	"github.com/highbuyer/proxypool/redis"
 	"gorm.io/gorm"
 )
 
@@ -25,15 +26,26 @@ func InitTables() {
 			return
 		}
 	}
-	// Warnln: 自动迁移仅仅会创建表，缺少列和索引，并且不会改变现有列的类型或删除未使用的列以保护数据。
-	// 如更改表的Column请于数据库中操作
-	err := DB.AutoMigrate(&Proxy{})
-	if err != nil {
-		log.Errorln("\n\t\t[db/proxy.go] database migration failed")
+
+	// 连接 Redis 数据库并进行测试
+	redisConn, err2 := redis.ConnectRedis("localhost:6379", "")
+	if err2 != nil {
+		log.Errorln("\n\t\t[db/proxy.go] failed to connect to Redis database")
 		panic(err)
 	}
-}
 
+	_, pingErr := redisConn.Ping().Result()
+	if pingErr != nil {
+		log.Errorln("\n\t\t[db/proxy.go] failed to ping the Redis database")
+		panic(pingErr)
+	}
+
+	err3 := DB.AutoMigrate(&Proxy{})
+	if err3 != nil {
+		log.Errorln("\n\t\t[db/proxy.go] database migration failed")
+		panic(err3)
+	}
+}
 func SaveProxyList(pl proxy.ProxyList) {
 	if DB == nil {
 		return
@@ -41,7 +53,7 @@ func SaveProxyList(pl proxy.ProxyList) {
 
 	DB.Transaction(func(tx *gorm.DB) error {
 		// Set All Usable to false
-		if err := DB.Model(&Proxy{}).Where("useable = ?", true).Update("useable", "false").Error; err != nil {
+		if err := DB.Model(&Proxy{}).Where("useable = ?", true).Update("useable", false).Error; err != nil {
 			log.Warnln("database: Reset useable to false failed: %s", err.Error())
 		}
 		// Create or Update proxies
@@ -63,16 +75,16 @@ func SaveProxyList(pl proxy.ProxyList) {
 				}
 			}
 		}
-		log.Infoln("database: Updated")
+		log.Infoln("database:Succeeded in saving the list of proxies")
 		return nil
 	})
 }
 
 // Get a proxy list consists of all proxies in database
-func GetAllProxies() (proxies proxy.ProxyList) {
+func GetAllProxies() *proxy.ProxyList {
 	proxies = make(proxy.ProxyList, 0)
 	if DB == nil {
-		return nil
+		return &proxies
 	}
 
 	proxiesDB := make([]Proxy, 0)
@@ -83,11 +95,11 @@ func GetAllProxies() (proxies proxy.ProxyList) {
 			p, err := proxy.ParseProxyFromLink(proxyDB.Link)
 			if err == nil && p != nil {
 				p.SetUseable(false)
-				proxies = append(proxies, p)
+				*proxies = append(*proxies, p)
 			}
 		}
 	}
-	return
+	return proxies
 }
 
 // Clear proxies unusable more than 1 week
@@ -95,6 +107,7 @@ func ClearOldItems() {
 	if DB == nil {
 		return
 	}
+
 	lastWeek := time.Now().Add(-time.Hour * 24 * 7)
 	if err := DB.Where("updated_at < ? AND useable = ?", lastWeek, false).Delete(&Proxy{}); err != nil {
 		var count int64
@@ -102,9 +115,10 @@ func ClearOldItems() {
 		if count == 0 {
 			log.Infoln("database: Nothing old to sweep") // TODO always this line?
 		} else {
-			log.Warnln("database: Delete old item failed: %s", err.Error.Error())
+			log.Warnln("database: Delete old item failed: %s", err.Error())
 		}
-	} else {
-		log.Infoln("database: Swept old and unusable proxies")
+		return
 	}
+	log.Infoln("database: Succeeded in clearing old and unusable items")
+
 }
