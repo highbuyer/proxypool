@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 设置数据库字段，表名为默认为type名的复数。相比于原作者，不使用软删除特性
+// Proxy 设置数据库字段，表名为默认为type名的复数。相比于原作者，不使用软删除特性
 type Proxy struct {
 	ID        uint `gorm:"primarykey"`
 	CreatedAt time.Time
