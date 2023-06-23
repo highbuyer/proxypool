@@ -2,7 +2,6 @@ package redis
 
 import (
 	"fmt"
-	"github.com/gomodule/redigo/redis"
 	"testing"
 )
 
@@ -41,15 +40,15 @@ func TestConnectRedis(t *testing.T) {
 	value2 := "test_value2"
 	key2 := "test_key2"
 
-	setAuthError := setValue(conn2,key2,value2,t )
-	if setAuthError!=nil{
-		t.Errorf("Expected no errors when setting a value with authorization. Got %v instead.",setAuthError.Error() )
+	setAuthError := setValue(conn2, key2, value2, t)
+	if setAuthError != nil {
+		t.Errorf("Expected no errors when setting a value with authorization. Got %v instead.", setAuthError.Error())
 		return
 	}
 
-	authVal ,autherr:=getValue(conn,key,t );
-	if(authVal!=value||autherr!=nil){
-		t.Errorf(fmt.Sprintf(“expect :%s actual:%s”,value,result,err))
+	authVal, autherr := getValue(conn, key, t)
+	if authVal != value || autherr != nil {
+		t.Errorf(fmt.Sprintf("expect :%s actual:%s", value, result, err))
 		return
 	}
 
