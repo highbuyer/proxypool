@@ -1,72 +1,27 @@
 package redis
 
 import (
-	"fmt"
-	"github.com/gomodule/redigo/redis"
-	"testing"
-	"time"
+	"github.com/highbuyer/proxypool/pool"
 )
 
-var Pool *redis.Pool // Redis 连接池对象
-
-// 创建新 Redis 连接
-func newConnection(addr, password string) (redis.Conn, error) {
-	c, err := redis.Dial("tcp", addr)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(password) > 0 {
-		_, authErr := c.Do("AUTH", password)
-		if authErr != nil {
-			c.Close()
-			return nil, authErr
-		}
-	}
-
-	return c, nil
+type RedisClient interface {
+	GetConn() (conn redis.Conn, err error)
+	Close()
 }
 
-// 初始化 Redis 连接池（仅需执行一次）
-func init() {
-	addr := "localhost:6379" // 修改为实际地址和端口号
-	password := ""           // 如果有密码，请在这里输入密码
-
-	Pool = &redis.Pool{
-		Dial: func() (redis.Conn, error) {
-			return newConnection(addr, password)
-		},
-		TestOnBorrow: func(c redis.Conn, t time.Time) error {
-			_, err := c.Do("PING")
-			return err
-		},
-		MaxIdle:     10,
-		MaxActive:   100,
-		IdleTimeout: (60 * time.Second),
-	}
+type redisClient struct {
+	pool pool.RedisClient // 修改此处为公共模块中的接口类型。
 }
 
-// ConnectRedis 返回已连接到指定 Redis 服务器的连接对象。
-func ConnectRedis(addr, password string) (conn redis.Conn, err error) {
-	conn = Pool.Get()
-
-	_, err = conn.Do("PING")
-	if err != nil {
-		conn.Close()
-		return nil, err
-	}
+func NewRedisClient(addr, password string) RedisClient {
+	client := &redisClient{pool.NewRedisPool(addr, password)}
+	return client // 返回新构建的客户端对象即可。
+}
+func (c *redisClient) GetConn() (conn redis.Conn, err error) {
+	conn = c.pool.Get()
 	return conn, nil
 }
-func setValue(conn redis.Conn, key string, value string, t *testing.T) error {
-	_, err := conn.Do("SET", key, value)
-	return err
-}
 
-func getValue(conn redis.Conn, key string, t *testing.T) (string, error) {
-	valueBytes, err := redis.Bytes(conn.Do("GET", key))
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf("%s", valueBytes), nil
-
+func (c *redisClient) Close() {
+	c.pool.Close()
 }
