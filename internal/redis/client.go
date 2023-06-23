@@ -42,4 +42,22 @@ func init() {
 	}
 }
 
+// ConnectRedis 使用指定的参数连接 Redis 服务器，并返回与之对应的 Connection 实例。
+func ConnectRedis(addr string, password string) (redis.Conn, error) {
+	c, err := redis.Dial("tcp", addr)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(password) > 0 {
+		_, authErr := c.Do("AUTH", password)
+		if authErr != nil {
+			c.Close()
+			return nil, authErr
+		}
+	}
+
+	return c, nil
+}
+
 // 封装一些常用操作函数，如 Set、Get 等等。
