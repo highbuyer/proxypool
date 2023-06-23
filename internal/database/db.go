@@ -6,7 +6,6 @@ import (
 	"github.com/highbuyer/proxypool/log"
 
 	"github.com/highbuyer/proxypool/config"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
