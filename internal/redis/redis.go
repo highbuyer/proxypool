@@ -2,7 +2,9 @@
 package redis
 
 import (
+	"fmt"
 	"github.com/gomodule/redigo/redis"
+	"testing"
 	"time"
 )
 
@@ -55,4 +57,17 @@ func ConnectRedis(addr, password string) (conn redis.Conn, err error) {
 		return nil, err
 	}
 	return conn, nil
+}
+func setValue(conn redis.Conn, key string, value string, t *testing.T) error {
+	_, err := conn.Do("SET", key, value)
+	return err
+}
+
+func getValue(conn redis.Conn, key string, t *testing.T) (string, error) {
+	valueBytes, err := redis.Bytes(conn.Do("GET", key))
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s", valueBytes), nil
+
 }

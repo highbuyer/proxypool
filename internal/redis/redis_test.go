@@ -1,9 +1,9 @@
-// redis_test.go
 package redis
 
 import (
 	"fmt"
 	"testing"
+	"github.com/gomodule/redigo/redis"
 )
 
 func TestConnectRedis(t *testing.T) {
@@ -25,7 +25,8 @@ func TestConnectRedis(t *testing.T) {
 
 	resultVal, err := getValue(conn, key1, t)
 	if resultVal != value1 || err != nil {
-		t.Errorf("Expected the same value as was set in Redis for key=%s. Got %v,%v respectively.", key, resultVal, err.Error())
+		t.Errorf("Expected the same value as was set in Redis for key=%s. Got %v,%v respectively.", key1,
+			resultVal, err.Error())
 		return
 	}
 
@@ -40,30 +41,16 @@ func TestConnectRedis(t *testing.T) {
 	value2 := "test_value2"
 	key2 := "test_key2"
 
-	setAuthError := setValue(conn, key2, value2, t)
-	if setAuthError != nil {
-		t.Errorf("Expected no errors when setting a value with authorization. Got %v instead.", setAuthError.Error())
+	setAuthError := setValue(conn2,key2,value2,t )
+	if setAuthError!=nil{
+		t.Errorf("Expected no errors when setting a value with authorization. Got %v instead.",setAuthError.Error() )
 		return
 	}
 
-	authVal, authErr := getValue(conn2, key2, t)
-	if authVal != value2 || authErr != nil {
-		t.Errorf("Expected the same value as was set in Redis for key=%s. Got %v,%v respectively.", key2, authVal, err.Error())
+	authVal ,autherr:=getValue(conn,key,t );
+	if(authVal!=value||autherr!=nil){
+		t.Errorf(fmt.Sprintf(“expect :%s actual:%s”,value,result,err))
 		return
 	}
-}
 
-func setValue(conn redis.Conn, key string, value string, t *testing.T) error {
-	_, err := conn.Do("SET", key, value)
-	return err
-}
-
-func getValue(conn redis.Conn, key string, t *testing.T) (string, error) {
-	value, err := conn.Do("GET", key)
-	if err != nil {
-		t.Errorf("Unable to get a response from Redis: " + err.Error())
-		return "", err
-	}
-
-	return fmt.Sprintf("%s", value), nil
 }
